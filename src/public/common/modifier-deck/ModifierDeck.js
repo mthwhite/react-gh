@@ -36,6 +36,12 @@ class ModifierDeck extends React.Component {
       return this.props.shuffle(this.props.shuffledDeck);
   }
 
+  shuffleButtonElement = "";
+
+  shuffleButton() {
+      return (<Button bsSize="lg" bsStyle="danger" onClick={() => {this.props.shuffleDeck();this.shuffleButtonElement = ""}}>End Round and Shuffle</Button>)
+  }
+
   drawCard() {
       var discard = this.props.discard;
       var drawnCard = this.props.shuffledDeck.pop();
@@ -50,17 +56,19 @@ class ModifierDeck extends React.Component {
              this.addToFullDeck('curse', -1);
              break;
           case 'timesTwo':
-              this.props.shuffleDeck();
-              console.log("This is wrong, it should happen at end of turn.");
-              this.props.discard.unshift('~~shuffle~~');
+              this.shuffleButtonElement = this.shuffleButton();
+              this.props.discard.unshift('~~Shuffle at end of round~~');
               break;
           case 'miss':
-              this.props.shuffleDeck();
-              console.log("This is wrong, it should happen at end of turn.");
-              this.props.discard.unshift('~~shuffle~~');
+              this.shuffleButtonElement = this.shuffleButton();
+              this.props.discard.unshift('~~Shuffle at end of round~~');
               break;
           default:
             break;
+      }
+      if(this.props.shuffledDeck.length === 0) {
+          this.props.discard.unshift('~~Deck Shuffled Due To Running Out Of Cards~~');
+          this.props.shuffleDeck();
       }
   }
 
@@ -70,6 +78,8 @@ class ModifierDeck extends React.Component {
       }
   }
 
+
+
   render() {
     return (
         <div className = 'modifierDeck'>
@@ -78,6 +88,9 @@ class ModifierDeck extends React.Component {
          <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('bless', 1)}>Add Bless</Button>
          <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('curse', 1)}>Add Curse</Button>
         </ButtonGroup>
+        <div className = "shuffle-button">
+         {this.shuffleButtonElement}
+         </div>
         <div className = 'discard'>
         Cards Drawn: {this.props.discard.map((card, index) => {return (<div key = {index}>{card}</div>)})}
         </div>
