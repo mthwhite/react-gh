@@ -1,10 +1,12 @@
 {
-  "main.css": "static/css/main.286c7ca1.css",
-  "main.css.map": "static/css/main.286c7ca1.css.map",
-  "main.js": "static/js/main.3955706d.js",
-  "main.js.map": "static/js/main.3955706d.js.map",
+  "main.css": "static/css/main.26a49bf0.css",
+  "main.css.map": "static/css/main.26a49bf0.css.map",
+  "main.js": "static/js/main.6d105e22.js",
+  "main.js.map": "static/js/main.6d105e22.js.map",
   "static/media/Back.png": "static/media/Back.bec135de.png",
   "static/media/BlankCard.png": "static/media/BlankCard.0820cecb.png",
+  "static/media/Bless.png": "static/media/Bless.01e04797.png",
   "static/media/CardBack.png": "static/media/CardBack.85e64487.png",
+  "static/media/Curse.png": "static/media/Curse.e37e2cd1.png",
   "static/media/Plus.png": "static/media/Plus.47d5f17d.png"
 }
