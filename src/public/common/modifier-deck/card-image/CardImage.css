@@ -1,0 +1,106 @@
+.whole-card {
+  position: relative;
+  width: 165.5px;
+  height: 110px;
+  top: 0;
+  left: 0;
+}
+
+.blank-card {
+    position: absolute;
+    top: 0px;
+    left: 6px;
+    height: 100%;
+}
+
+/*Card Colors*/
+.positive {
+    filter: saturate(200%) hue-rotate(95deg);
+}
+
+.negative {
+    filter: saturate(200%) hue-rotate(315deg);
+}
+
+.crit {
+    filter: saturate(200%) hue-rotate(270deg);
+}
+
+.miss {
+    filter: saturate(200%) hue-rotate(20deg);
+}
+
+.standard {
+
+}
+
+/*Card Extras*/
+.Plus {
+    position: absolute;
+    top: 14px;
+    left: 46px;
+    height: 80%;
+}
+
+.Times {
+    position: absolute;
+    top: 41px;
+    left: 61px;
+    height: 33%;
+}
+
+.Minus {
+    position: absolute;
+    top: 51px;
+    left: 60px;
+    height: 16%;
+}
+
+.Zero {
+    position: absolute;
+    top: 29px;
+    left: 89px;
+    height: 50%;
+}
+
+.One {
+    position: absolute;
+    top: 24px;
+    left: 80px;
+    height: 60%;
+}
+
+.Two {
+    position: absolute;
+    top: 22px;
+    left: 82px;
+    height: 60%;
+}
+
+.Back {
+    position: absolute;
+    top: 1px;
+    left: 7px;
+    height: 100%;
+}
+
+.Curse {
+    position: absolute;
+    top: 11px;
+    left: 19px;
+    height: 77%;
+}
+
+.Bless {
+    position: absolute;
+    top: 14px;
+    left: 21px;
+    height: 72%;
+}
+
+.Miss {
+    position: absolute;
+    top: 22px;
+    left: 57px;
+    height: 60%;
+}

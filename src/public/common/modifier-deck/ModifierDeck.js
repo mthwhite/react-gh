@@ -4,6 +4,8 @@ import {
   ButtonGroup,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import CardImage from "./card-image/CardImage";
+import "./ModifierDeck.css";
 
 class ModifierDeck extends React.Component {
     updateCharacter(a, b) {
@@ -39,13 +41,23 @@ class ModifierDeck extends React.Component {
   shuffleButtonElement = "";
 
   shuffleButton() {
-      return (<Button bsSize="lg" bsStyle="danger" onClick={() => {this.props.shuffleDeck();this.shuffleButtonElement = ""}}>End Round and Shuffle</Button>)
+      return (<Button bsSize="lg" bsStyle="danger" onClick={() => {this.shuffleButtonPress()}}>End Round and Shuffle</Button>)
+  }
+
+  shuffleButtonPress() {
+      this.props.shuffleDeck();
+      this.shuffleButtonElement = "";
+      this.props.discard.unshift('~~Deck Shuffled~~');
+  }
+
+  createCard(cardName) {
+      return (<CardImage card = {cardName} />)
   }
 
   drawCard() {
       var discard = this.props.discard;
       var drawnCard = this.props.shuffledDeck.pop();
-      discard.unshift(drawnCard);
+      discard.unshift(this.createCard(drawnCard));
       this.updateCharacter('discard', discard);
 
       switch(drawnCard) {
@@ -83,11 +95,22 @@ class ModifierDeck extends React.Component {
   render() {
     return (
         <div className = 'modifierDeck'>
-        <ButtonGroup>
-         <Button bsSize="lg" bsStyle="danger" onClick={() => this.drawCard()}>Draw Card</Button>
-         <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('bless', 1)}>Add Bless</Button>
-         <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('curse', 1)}>Add Curse</Button>
-        </ButtonGroup>
+        <div className = 'additional-cards'>
+            <ButtonGroup>
+             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('bless', 1)}>Add Bless</Button>
+             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('curse', 1)}>Add Curse</Button>
+            </ButtonGroup>
+        </div>
+        <div className = 'draw-deck'>
+            <CardImage card = {'cardBack'} />
+            <div className = 'draw-buttons'>
+                <ButtonGroup vertical>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Card</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Advantage</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Disadvantage</Button>
+                </ButtonGroup>
+            </div>
+        </div>
         <div className = "shuffle-button">
          {this.shuffleButtonElement}
          </div>

@@ -1,0 +1,14 @@
+.draw-deck {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.draw-buttons {
+    position: absolute;
+    top: 11px;
+    left: 174px;
+}
+
+.discard {
+}

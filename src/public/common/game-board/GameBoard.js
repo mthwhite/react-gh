@@ -15,7 +15,6 @@ import {
 import CharacterSheet from '../character-sheet/CharacterSheet';
 import ModifierDeck from '../modifier-deck/ModifierDeck';
 import HpXpBoard from '../hp-xp-board/HpXpBoard';
-import EndScenario from '../end-scenario/EndScenario';
 
 class GameBoard extends React.Component {
   constructor(props) {
