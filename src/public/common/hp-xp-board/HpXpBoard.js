@@ -14,7 +14,10 @@ class HpXpBoard extends React.Component {
     return (
         <div className="hp-xp-bar">
             <div className="health-wrapper">
-              <HealthTracker onTick={(a,b) => this.tick(a,b)} currentHp={this.props.currentStats.hp} />
+              <HealthTracker
+                  onTick={(a,b) => this.tick(a,b)}
+                  currentHp={this.props.currentStats.hp}
+                  maxHp={this.props.currentStats.maxHp} />
             </div>
             <div className="experience-wrapper">
               <ExperienceTracker onTick={(a,b) => this.tick(a,b)} currentXp={this.props.currentStats.xp} />

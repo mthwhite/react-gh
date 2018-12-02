@@ -54,34 +54,94 @@ class ModifierDeck extends React.Component {
       return (<CardImage card = {cardName} />)
   }
 
-  drawCard() {
-      var discard = this.props.discard;
-      var drawnCard = this.props.shuffledDeck.pop();
-      discard.unshift(this.createCard(drawnCard));
-      this.updateCharacter('discard', discard);
+  loadCard(cardType) {
+    return cardType;
+  }
 
-      switch(drawnCard) {
-          case 'bless':
-            this.addToFullDeck('bless', -1);
-            break;
-          case 'curse':
-             this.addToFullDeck('curse', -1);
-             break;
-          case 'timesTwo':
-              this.shuffleButtonElement = this.shuffleButton();
-              this.props.discard.unshift('~~Shuffle at end of round~~');
-              break;
-          case 'miss':
-              this.shuffleButtonElement = this.shuffleButton();
-              this.props.discard.unshift('~~Shuffle at end of round~~');
-              break;
-          default:
-            break;
+  handleCardEffects(card) {
+    if(card.remove) {
+      this.addToFullDeck(card.name, -1);
+    }
+    if(card.shuffle) {
+      this.shuffleButtonElement = this.shuffleButton();
+      this.props.discard.unshift('~~Shuffle at end of round~~');
+    }
+  }
+
+  handleChain(cards) {
+    var chain = 1;
+    cards.forEach(function(card){if(!card.chain) { chain = 0 }});
+    if(chain) {
+      this.drawCards('normal');
+    }
+  }
+
+  drawCard() {
+    var discard = this.props.discard;
+    var drawnCard = this.props.shuffledDeck.pop();
+    discard.unshift(this.createCard(drawnCard));
+    this.updateCharacter('discard', discard);
+
+    if(this.props.shuffledDeck.length === 0) {
+        this.props.discard.unshift('~~Deck Shuffled Due To Running Out Of Cards~~');
+        this.props.shuffleDeck();
+    }
+
+    return this.getCardData(drawnCard);
+  }
+
+  drawCards(type) {
+      if(type.match(/advantage/i)) {
+        this.props.discard.unshift('------end '+type+'------');
       }
-      if(this.props.shuffledDeck.length === 0) {
-          this.props.discard.unshift('~~Deck Shuffled Due To Running Out Of Cards~~');
-          this.props.shuffleDeck();
+      var cards = [];
+
+      const card_one = this.drawCard();
+      this.handleCardEffects(card_one);
+      cards.push(card_one);
+
+      if(type.match(/advantage/i)) {
+        const card_two = this.drawCard();
+        this.handleCardEffects(card_two);
+        cards.push(card_two);
       }
+      this.handleChain(cards);
+
+      if(type.match(/advantage/i)) {
+        this.props.discard.unshift('--------'+type+'--------');
+      }
+  }
+
+  getCardData(cardName) {
+    const cardData = {
+      name: cardName,
+      shuffle: this.getCardShuffle(cardName),
+      remove: this.getCardRemove(cardName),
+      chain: this.getCardChain(cardName),
+    };
+
+    return cardData;
+  }
+
+  getCardShuffle(cardName) {
+      if(cardName.match(/timesTwo|Miss/i)) {
+          return 1;
+      }
+      return 0;
+  }
+
+  getCardRemove(cardName) {
+      if(cardName.match(/bless|curse/i)) {
+          return 1;
+      }
+      return 0;
+  }
+
+  getCardChain(cardName) {
+      if(cardName.match(/chain/i)) {
+          return 1;
+      }
+      return 0;
   }
 
   componentDidMount() {
@@ -105,9 +165,9 @@ class ModifierDeck extends React.Component {
             <CardImage card = {'cardBack'} />
             <div className = 'draw-buttons'>
                 <ButtonGroup vertical>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Card</Button>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Advantage</Button>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCard()}>Draw Disadvantage</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('normal')}>Draw Card</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('advantage')}>Draw Advantage</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('disadvantage')}>Draw Disadvantage</Button>
                 </ButtonGroup>
             </div>
         </div>

@@ -104,3 +104,66 @@
     left: 57px;
     height: 60%;
 }
+
+.Poison {
+    position: absolute;
+    top: 35px;
+    left: 8px;
+    height: 40%;
+}
+
+.Muddle {
+    position: absolute;
+    top: 37px;
+    left:6px;
+    height: 36%;
+}
+
+.Wound {
+    position: absolute;
+    top: 36px;
+    left:7px;
+    height: 39%;
+}
+
+.Chain {
+    position: absolute;
+    top: 37px;
+    left:132px;
+    height: 35%;
+}
+
+.Light {
+    position: absolute;
+    top: 36px;
+    left:8px;
+    height: 39%;
+}
+
+.Night {
+    position: absolute;
+    top: 38px;
+    left:10px;
+    height: 39%;
+}
+
+.Wind {
+    position: absolute;
+    top: 37px;
+    left:11px;
+    height: 38%;
+}
+
+.Leaf {
+    position: absolute;
+    top: 39px;
+    left:11px;
+    height: 35%;
+}
+
+.Heal {
+    position: absolute;
+    top: 34px;
+    left:7px;
+    height: 44%;
+}

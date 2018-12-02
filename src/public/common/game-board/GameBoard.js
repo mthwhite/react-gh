@@ -22,13 +22,13 @@ class GameBoard extends React.Component {
 
     this.state = {
         characterInfo: {
-            characterClass: 'spellweaver',
+            characterClass: 'bladeswarm',
             gold: 0,
             totalXp: 0,
             level: 1,
             items: [],
             checks: 0,
-            availablePerks: 2,
+            availablePerks: 20,
             perks: [],
             modifierDeck: {
                 bless: 0,
@@ -50,10 +50,11 @@ class GameBoard extends React.Component {
         currentStats: {
             xp: 0,
             hp: 10,
+            maxHp: 10,
             coins: 0,
             activeItems: [],
             usedItems: [],
-            spendItems: [],
+            spentItems: [],
             shuffledDeck: [],
             discard: [],
         }

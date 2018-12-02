@@ -10,7 +10,11 @@ class CardImage extends React.Component {
 
   getCardExtras() {
       var extras = [];
-      const cardExtras = ['Plus', 'Back', 'Zero', 'One', 'Two', 'Times', 'Minus', 'Miss'];
+      const cardExtras = [
+        'Plus', 'Back', 'Zero', 'One', 'Two', 'Times', 'Minus', 'Miss',
+         'Muddle', 'Poison', 'Wound',
+         'Light', 'Night', 'Wind', 'Leaf',
+         'Chain', 'Heal'];
       cardExtras.forEach((extra) => {
           var re = new RegExp(extra, 'i');
           if(this.props.card.match(re)) {
