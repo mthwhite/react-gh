@@ -1,12 +1,21 @@
 {
-  "main.css": "static/css/main.ca60a867.css",
-  "main.css.map": "static/css/main.ca60a867.css.map",
-  "main.js": "static/js/main.5f0db6c7.js",
-  "main.js.map": "static/js/main.5f0db6c7.js.map",
+  "main.css": "static/css/main.0cf1b85c.css",
+  "main.css.map": "static/css/main.0cf1b85c.css.map",
+  "main.js": "static/js/main.70ef889c.js",
+  "main.js.map": "static/js/main.70ef889c.js.map",
   "static/media/Back.png": "static/media/Back.bec135de.png",
   "static/media/BlankCard.png": "static/media/BlankCard.2bd15b2c.png",
   "static/media/Bless.png": "static/media/Bless.01e04797.png",
   "static/media/CardBack.png": "static/media/CardBack.85e64487.png",
+  "static/media/Chain.png": "static/media/Chain.47a7a26f.png",
   "static/media/Curse.png": "static/media/Curse.e37e2cd1.png",
-  "static/media/Plus.png": "static/media/Plus.47d5f17d.png"
+  "static/media/Heal.png": "static/media/Heal.cfb84ada.png",
+  "static/media/Leaf.png": "static/media/Leaf.5aa71b33.png",
+  "static/media/Light.png": "static/media/Light.d58c91b7.png",
+  "static/media/Muddle.png": "static/media/Muddle.61d25eaf.png",
+  "static/media/Night.png": "static/media/Night.232bcd7c.png",
+  "static/media/Plus.png": "static/media/Plus.47d5f17d.png",
+  "static/media/Poison.png": "static/media/Poison.5727122d.png",
+  "static/media/Wind.png": "static/media/Wind.e1cb5031.png",
+  "static/media/Wound.png": "static/media/Wound.2a6a7e62.png"
 }
