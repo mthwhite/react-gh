@@ -10,5 +10,13 @@
     left: 174px;
 }
 
+.draw-buttons .btn {
+  margin-bottom: 5px;
+}
+
 .discard {
+}
+
+.lastDraw {
+  margin-bottom: 50px;
 }

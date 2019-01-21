@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import "./PerkCheck.css"
 
 class PerkCheck extends React.Component {
-  updateCharacter(a, b) {
-     return this.props.onUpdateCharacter(a, b);
+  checked = [false, false];
+
+  updateCharacter(a) {
+     return this.props.onUpdateCharacter(a);
   }
 
   canBeToggled(index) {
       return (this.props.availablePerks > 0 || this.checked[index])? false : true;
   }
 
-  checked = [false, false];
-
   toggle(index) {
       this.checked[index] = (this.checked[index])? false : true;
+      var thisPerk = this.props.thisPerk;
       if(this.checked[index]) {
                 this.props.selectedPerks.push(this.props.thisPerk);
                 this.props.thisPerk.effects.forEach((info) => {
@@ -23,9 +24,14 @@ class PerkCheck extends React.Component {
                     }
                     this.props.fullDeck[info.card] += (info.amount);
                 });
-                this.updateCharacter('modifierDeck', this.props.fullDeck);
-                this.updateCharacter('perks', this.props.selectedPerks);
-                this.updateCharacter('availablePerks', this.props.availablePerks - 1);
+
+                thisPerk.used++;
+                this.updateCharacter({
+                  'modifierDeck': this.props.fullDeck,
+                  'thisPerk': thisPerk,
+                  'perks': this.props.selectedPerks,
+                  'availablePerks': this.props.availablePerks - 1
+                });
       } else {
                 var newPerks = [];
                 var found = 0;
@@ -39,9 +45,14 @@ class PerkCheck extends React.Component {
                 this.props.thisPerk.effects.forEach((info) => {
                     this.props.fullDeck[info.card] += (info.amount) * (-1);
                 });
-                this.updateCharacter('modifierDeck', this.props.fullDeck);
-                this.updateCharacter('perks', newPerks);
-                this.updateCharacter('availablePerks', this.props.availablePerks + 1);
+
+                thisPerk.used--;
+                this.updateCharacter({
+                  'modifierDeck': this.props.fullDeck,
+                  'thisPerk': thisPerk,
+                  'perks': newPerks,
+                  'availablePerks': this.props.availablePerks + 1
+                });
       }
   }
 
@@ -49,6 +60,11 @@ class PerkCheck extends React.Component {
       var checkboxes = [];
       for (var i = 1; i <= this.props.thisPerk.amount ; i++) {
          checkboxes.push(i);
+         if(this.props.thisPerk.used >= i) {
+           this.checked[i-1] = true;
+         } else {
+           this.checked[i-1] = false;
+         }
        }
     return (
         <div className = 'perk'>
@@ -61,8 +77,8 @@ class PerkCheck extends React.Component {
                       disabled = {this.canBeToggled(index)}
                       ref={"perk" + index}
                       type="checkbox"
-                      defaultChecked = {false}
-                      onClick={() => {this.toggle(index)}} />)
+                      checked = {this.checked[index]}
+                      onChange={() => {this.toggle(index)}} />)
             })}
             &nbsp;
             {this.props.thisPerk.perk}

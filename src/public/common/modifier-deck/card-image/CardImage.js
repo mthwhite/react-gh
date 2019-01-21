@@ -50,6 +50,9 @@ class CardImage extends React.Component {
 
 
   render() {
+    if(this.props.card.match(/[^A-Za-z0-9]/)) {
+      return (this.props.card);
+    }
     var extras = [];
     this.getCardExtras().forEach(
         (type, index) => {

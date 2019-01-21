@@ -8,8 +8,8 @@ import CardImage from "./card-image/CardImage";
 import "./ModifierDeck.css";
 
 class ModifierDeck extends React.Component {
-    updateCharacter(a, b) {
-       return this.props.onUpdateCharacter(a, b);
+    updateCharacter(a) {
+       return this.props.onUpdateCharacter(a);
     }
 
   addToFullDeck(card, change) {
@@ -18,7 +18,9 @@ class ModifierDeck extends React.Component {
       } else {
         this.props.fullDeck[card] += change;
       }
-      this.updateCharacter('modifierDeck', this.props.fullDeck);
+      this.updateCharacter({
+        'modifierDeck': this.props.fullDeck
+      });
   }
 
   addToPartialDeck(card, change) {
@@ -28,17 +30,31 @@ class ModifierDeck extends React.Component {
       this.shufflePartialDeck();
   }
 
+  addToLastDraw(card) {
+    var thisDraw = this.props.lastDraw;
+    thisDraw.unshift(card);
+    this.updateCharacter({
+      'lastDraw': thisDraw
+    });
+  }
+
   modifyCard(card, change) {
       this.addToFullDeck(card, change);
-
       this.addToPartialDeck(card, change);
+      this.tickCount(card, change);
+  }
+
+  tickCount(card, change) {
+    if(card.match(/bless|curse/i)) {
+        this[card] += change;
+    }
   }
 
   shufflePartialDeck() {
       return this.props.shuffle(this.props.shuffledDeck);
   }
 
-  shuffleButtonElement = "";
+  shuffleButtonElement = (this.props.promptToShuffle)? this.shuffleButton() : "";
 
   shuffleButton() {
       return (<Button bsSize="lg" bsStyle="danger" onClick={() => {this.shuffleButtonPress()}}>End Round and Shuffle</Button>)
@@ -47,11 +63,11 @@ class ModifierDeck extends React.Component {
   shuffleButtonPress() {
       this.props.shuffleDeck();
       this.shuffleButtonElement = "";
-      this.props.discard.unshift('~~Deck Shuffled~~');
+      this.addToLastDraw('~~Deck Shuffled~~');
   }
 
   createCard(cardName) {
-      return (<CardImage card = {cardName} />)
+      return (cardName)
   }
 
   loadCard(cardType) {
@@ -61,10 +77,14 @@ class ModifierDeck extends React.Component {
   handleCardEffects(card) {
     if(card.remove) {
       this.addToFullDeck(card.name, -1);
+      this.tickCount(card.name, -1);
     }
     if(card.shuffle) {
+      this.updateCharacter({
+        'promptToShuffle': true,
+      });
       this.shuffleButtonElement = this.shuffleButton();
-      this.props.discard.unshift('~~Shuffle at end of round~~');
+      this.addToLastDraw('~~Shuffle at end of round~~');
     }
   }
 
@@ -76,23 +96,45 @@ class ModifierDeck extends React.Component {
     }
   }
 
-  drawCard() {
+  putLastDrawInDiscard() {
     var discard = this.props.discard;
+    this.props.lastDraw.slice().reverse().forEach(function(card) {
+      discard.unshift(card);
+    });
+    this.updateCharacter({
+      'discard': discard,
+      'lastDraw': []
+    });
+    return 1;
+  }
+
+  drawCard() {
     var drawnCard = this.props.shuffledDeck.pop();
-    discard.unshift(this.createCard(drawnCard));
-    this.updateCharacter('discard', discard);
+    this.addToLastDraw(this.createCard(drawnCard));
 
     if(this.props.shuffledDeck.length === 0) {
-        this.props.discard.unshift('~~Deck Shuffled Due To Running Out Of Cards~~');
+        this.addToLastDraw('~~Deck shuffled due to being out of cards~~');
         this.props.shuffleDeck();
     }
 
     return this.getCardData(drawnCard);
   }
 
+  setUpDraw(type) {
+    var promise = new Promise((resolve, reject) => {
+        var worked = this.putLastDrawInDiscard();
+          if (worked) {
+            resolve(1);
+          } else {
+            reject(0);
+          }
+    });
+    promise.then(response => this.drawCards(type));
+  }
+
   drawCards(type) {
       if(type.match(/advantage/i)) {
-        this.props.discard.unshift('------end '+type+'------');
+        this.addToLastDraw('------end '+type+'------');
       }
       var cards = [];
 
@@ -105,10 +147,12 @@ class ModifierDeck extends React.Component {
         this.handleCardEffects(card_two);
         cards.push(card_two);
       }
-      this.handleChain(cards);
+      if(!type.match(/disadvantage/i)) {
+        this.handleChain(cards);
+      }
 
       if(type.match(/advantage/i)) {
-        this.props.discard.unshift('--------'+type+'--------');
+        this.addToLastDraw('--------'+type+'--------');
       }
   }
 
@@ -148,34 +192,44 @@ class ModifierDeck extends React.Component {
       if(this.props.shuffledDeck.length === 0) {
           this.props.shuffleDeck();
       }
+      this.curse = this.checkDeckFor('curse');
+      this.bless = this.checkDeckFor('bless');
+  }
+
+  checkDeckFor(type) {
+    return this.props.fullDeck[type];
   }
 
 
-
   render() {
+    this.curse = this.checkDeckFor('curse');
+    this.bless = this.checkDeckFor('bless');
     return (
         <div className = 'modifierDeck'>
         <div className = 'additional-cards'>
             <ButtonGroup>
-             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('bless', 1)}>Add Bless</Button>
-             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('curse', 1)}>Add Curse</Button>
+             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('bless', 1)}>Add Bless ({this.bless})</Button>
+             <Button bsSize="lg" bsStyle="danger" onClick={() => this.modifyCard('curse', 1)}>Add Curse ({this.curse})</Button>
             </ButtonGroup>
         </div>
         <div className = 'draw-deck'>
             <CardImage card = {'cardBack'} />
             <div className = 'draw-buttons'>
                 <ButtonGroup vertical>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('normal')}>Draw Card</Button>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('advantage')}>Draw Advantage</Button>
-                    <Button bsSize="small" bsStyle="danger" onClick={() => this.drawCards('disadvantage')}>Draw Disadvantage</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.setUpDraw('normal')}>Draw Card</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.setUpDraw('advantage')}>Draw Advantage</Button>
+                    <Button bsSize="small" bsStyle="danger" onClick={() => this.setUpDraw('disadvantage')}>Draw Disadvantage</Button>
                 </ButtonGroup>
             </div>
         </div>
         <div className = "shuffle-button">
-         {this.shuffleButtonElement}
+            {this.shuffleButtonElement}
+         </div>
+         <div className = 'lastDraw'>
+            Current Draw: {this.props.lastDraw.map((card, index) => {return (<div key = {index}><CardImage card = {card} /></div>)})}
          </div>
         <div className = 'discard'>
-        Cards Drawn: {this.props.discard.map((card, index) => {return (<div key = {index}>{card}</div>)})}
+          Previous Draws:  {this.props.discard.map((card, index) => {return (<div key = {index}><CardImage card = {card} /></div>)})}
         </div>
         </div>
     );
@@ -184,11 +238,13 @@ class ModifierDeck extends React.Component {
 
 ModifierDeck.propTypes = {
   onUpdateCharacter: PropTypes.func.isRequired,
+  lastDraw: PropTypes.array.isRequired,
   discard: PropTypes.array.isRequired,
   shuffledDeck: PropTypes.array.isRequired,
   fullDeck: PropTypes.object.isRequired,
   shuffleDeck: PropTypes.func.isRequired,
   shuffle: PropTypes.func.isRequired,
+  promptToShuffle: PropTypes.bool.isRequired,
 };
 
 export default ModifierDeck;
